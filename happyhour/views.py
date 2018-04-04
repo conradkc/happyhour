@@ -1,6 +1,11 @@
 from django.contrib.auth.models import User, Group
+from .models import Restaurant
 from rest_framework import viewsets
-from mysite.happyhour.serializers import UserSerializer, GroupSerializer
+from .serializers import UserSerializer, GroupSerializer, RestaurantSerializer
+
+class RestaurantViewSet(viewsets.ModelViewSet):
+    queryset = Restaurant.objects.all()
+    serializer_class = RestaurantSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
