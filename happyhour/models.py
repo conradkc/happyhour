@@ -4,9 +4,10 @@ from django.utils import timezone
 class Restaurant(models.Model):
     pub_date = models.DateTimeField('date published', default= timezone.now)
     name = models.CharField(max_length = 200)
+    address = models.CharField(max_length = 400)
     lat = models.DecimalField(max_digits=9, decimal_places=6, default = 0)
     long = models.DecimalField(max_digits=9, decimal_places=6, default = 0)
-    type = models.CharField(max_length = 200, null= True)
+    category = models.CharField(max_length = 200, null= True)
 
     def __str__(self):
         return self.name
