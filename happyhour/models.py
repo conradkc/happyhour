@@ -39,7 +39,7 @@ class HappyHour(models.Model):
     start = models.TimeField()
     duration = models.DurationField(default=0)
     day = models.CharField(
-        max_length = 2,
+        max_length = 1,
         choices = DAYS_OF_THE_WEEK_CHOICES,
     )
     restaurant = models.ForeignKey(
