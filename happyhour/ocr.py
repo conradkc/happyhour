@@ -41,28 +41,41 @@ def ImageToStringTimeDuration(path):
             time_indicators = ('AM','PM',':','am','pm')
             if any(s in format(block_text) for s in time_indicators):
                 time_strings.append(format(block_text))
-            print('Block Content: {}'.format(block_text))
+            #print('Block Content: {}'.format(block_text))
             #print('Block Bounds:\n {}'.format(block.bounding_box))
 
-    timestart, duration = ConvertToStartDuration(time_strings)
+    #timestart, duration = ConvertToStartDuration(time_strings)
 
-    return '\n'.join(block_strings),timestart,duration
-
-def ConvertToStartDuration(time_strings):
-    format = '%I:%M%p'
-    timestart = []
-    duration = []
-    for timerange in time_strings:
-        startstring = timerange.split('-')[0]
-        timestart.append(datetime.strptime(startstring,format))
-        endstring = timerange.split('-')[1]
-        timeend = datetime.strptime(endstring, format)
-        duration.append(timeend-datetime.strptime(startstring,format))
-
-    return timestart,duration
+    return '\n'.join(block_strings)
 
 
-# settings.configure()
-# root_path = settings.BASE_DIR
-# path = os.path.join(root_path,'happyhour','media','Fete Hawaii.jpg')
-# print(ImageToStringTimeDuration(path))
+def timerange_to_start_duration(timerange):
+    for separator in ('-', 'till', 'Till', 'TILL'):
+        try:
+            # get times and split by '-' eg. 2:30pm-5:30pm -> 2:30pm start and 5:30pm end
+            start_string = timerange.split(separator)[0]
+            #print(start_string)
+            end_string = timerange.split(separator)[1]
+            #print(end_string)
+            # get am or pm from second time e.g. 2-5pm -> 2pm-5pm
+            if start_string[-1:] != 'm' or 'M':
+               start_string = start_string + end_string[-2:]
+            # convert to datetime field
+            start_time = try_parsing_time(start_string)
+            end_time = try_parsing_time(end_string)
+            duration = end_time - start_time
+            return start_time, duration
+        except IndexError:
+            pass
+    raise ValueError('time range does not fit any format')
+
+
+
+
+def try_parsing_time(text):
+    for fmt in ('%I:%M%p', '%I%p'):
+        try:
+            return datetime.strptime(text, fmt)
+        except ValueError:
+            pass
+    raise ValueError('no valid time format found in: ' + text)

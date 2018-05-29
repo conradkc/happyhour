@@ -46,6 +46,8 @@ class HappyHour(models.Model):
         'Restaurant',
         on_delete=models.CASCADE,
     )
+
     has_food = models.BooleanField(default=False)
     has_drink = models.BooleanField(default=False)
-    Image = models.ImageField(null= True)
+    description = models.TextField(null= True)
+    Image = models.ImageField(null= True, upload_to= 'uploads/')
